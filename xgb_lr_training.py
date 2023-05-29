@@ -92,7 +92,7 @@ def main():
         if model_name == "lr":
             model = LogisticRegression(max_iter=100000, random_state=random_seed)
         elif model_name == "xgb":
-            model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', tree_method='hist')
+            model = xgb.XGBClassifier(eval_metric='logloss', tree_method='hist')
         model.set_params(**best_params)  # noqa
         model.fit(df_dict["train"][features], df_dict["train"]["FA"])
 
