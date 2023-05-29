@@ -1,3 +1,4 @@
+"""Script to plot results as reported in the paper."""
 import numpy as np
 import pandas as pd
 import json
@@ -6,10 +7,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def load_auc_ici(folders, dependence_on="n_samples"):
+def load_auc_ici(folders, dependence_on="n_samples", n_folds=10):
+    """Load auc and ici (computed on test set) for a given list of folders, for all the models considered in the study.
+    Input:
+        - folders (list of str): folder names
+        - dependence_on (str): parameter to be used to index the results ("n_samples" fo dependence on size, "ratio" for
+                               dependence on balancing ratio). Default "n_samples"
+        - n_folds (int): number of folds in training (Default 10)
+    Return:
+        - dictionaries with model names as keys and dataframe with results as values (one for auc and one for ici)
+    """
     sizes_or_ratios = np.zeros(len(folders), dtype=float)
-    auc = np.zeros((len(folders), 10))
-    ici = np.zeros((len(folders), 10))
+    auc = np.zeros((len(folders), n_folds))
+    ici = np.zeros((len(folders), n_folds))
     auc_dict = {}
     ici_dict = {}
 
@@ -32,7 +42,10 @@ def load_auc_ici(folders, dependence_on="n_samples"):
 
 
 def main():
-    with open('results/folders2use.json') as file:  # Import json file with folders to be analyzed
+    # Import json file with folders to be analyzed. It has to be structured as follows: keys are strings indicating
+    # the case-study ("size_dependence_original", "size_dependence_balanced" or "balance_dependence"); values are
+    # dictionaries with folders to be analyzed as values and corresponding sizes/ratios as keys.
+    with open('results/folders2use.json') as file:
         folders_dict = json.load(file)
 
     # Factor to compute 95% CI from standard deviation
@@ -40,11 +53,13 @@ def main():
     ci_factor = 1.96 / np.sqrt(n_folds)
 
     # Set plot configurations
+    figsize = (16, 6)
     ms = 10
     lw = 2.5
     capsize = 3
     labels_size = 15
     legend_size = 14
+    dpi = 600
     figures_dir = "results/figures/"
     if not os.path.exists(figures_dir):
         os.makedirs(figures_dir)
@@ -60,7 +75,7 @@ def main():
     auc_bal, ici_bal = load_auc_ici(folders_bal)
 
     # AUC plot
-    fig, ax = plt.subplots(1, 2, figsize=(16, 6), sharey=True, dpi=100)
+    fig, ax = plt.subplots(1, 2, figsize=figsize, sharey=True, dpi=dpi)
     for i, model in enumerate(models):  # original ratio
         ax[0].errorbar(auc[model].columns, auc[model].mean(), auc[model].std()*ci_factor, fmt='.-', markersize=ms,
                        label=model, capsize=capsize, linewidth=lw, color=palette[i])
@@ -80,7 +95,7 @@ def main():
     plt.savefig(figures_dir + 'auc_vs_size.png', bbox_inches='tight')
 
     # ICI plot
-    fig, ax = plt.subplots(1, 2, figsize=(16, 6), sharey=True, dpi=100)
+    fig, ax = plt.subplots(1, 2, figsize=figsize, sharey=True, dpi=dpi)
     for i, model in enumerate(models):  # plot ICI results (original ratio)
         ax[0].errorbar(ici[model].columns, ici[model].mean(), ici[model].std()*ci_factor, fmt='.-', markersize=ms,
                        label=model, capsize=capsize, linewidth=lw, color=palette[i])
@@ -103,7 +118,7 @@ def main():
     folders = folders_dict["balance_dependence"].values()
     auc, ici = load_auc_ici(folders, dependence_on="ratio")
     # AUC and ICI plot
-    fig, ax = plt.subplots(1, 2, figsize=(16, 6), dpi=100)
+    fig, ax = plt.subplots(1, 2, figsize=figsize, dpi=dpi)
     for i, model in enumerate(models):
         ax[0].errorbar(auc[model].columns, auc[model].mean(), auc[model].std()*ci_factor, fmt='.-', markersize=ms,
                        label=model,  capsize=capsize, linewidth=lw, color=palette[i])
