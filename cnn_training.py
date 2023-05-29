@@ -46,7 +46,7 @@ def main():
         log_file = open(path_results_fold + "logfile.log", "w")
         sys.stdout = log_file
 
-        # Get dictionary with indices of train/test/val sets
+        # Get dictionary with indices of train/test/val sets. If required, Undersample the training set.
         indices_sets = get_sets_from_cv_folds(i_fold_test, cv_folds, dataset, path_results_fold, ratio, random_seed)
 
         # Define dataloaders
