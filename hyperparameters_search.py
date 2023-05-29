@@ -1,5 +1,6 @@
+"""Script to perform hyperparameters search for XGB or LR models"""
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedGroupKFold, RandomizedSearchCV, GridSearchCV
+from sklearn.model_selection import StratifiedGroupKFold, RandomizedSearchCV
 from scipy.stats import randint, uniform
 import pandas as pd
 import sys
@@ -12,8 +13,8 @@ import pprint
 
 
 def get_args():
-    # Create the parser
-    parser = argparse.ArgumentParser()
+    """Get configuration arguments for the hyperparameters search"""
+    parser = argparse.ArgumentParser()  # Create the parser
     parser.add_argument('--model_name', type=str, choices=['xgb', 'lr'])
     parser.add_argument('--n_folds', type=int, default=5)
     parser.add_argument('--n_iter', type=int, default=10)

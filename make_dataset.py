@@ -1,7 +1,12 @@
+"""Script to create the dataset with ECG signals that will be used by the CNN model. The script takes as input the
+number of samples ("n_sampels") that have to be included, and it saves a compressed numpy file (.npz) with ECG-signals
+matrix of shape (n_samples, 12, 5000) and a numpy array with corresponding exam IDs. ECG waveforms are saved as numpy
+arrays and named with their exam ID. Exams are recorded at 1000Hz for 10s, and resampled to 500Hz by the script. All
+information about exams and patients is saved in a csv file whose path has to be indicated with the "path_df" argument.
+"""
 import pandas as pd
 import numpy as np
 import os
-from multiprocessing import Pool
 from torch.nn import AvgPool1d
 import torch
 import argparse

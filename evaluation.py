@@ -32,18 +32,29 @@ def ici(labels, predictions):
 
 
 class MetricsCV:
-    """Class to keep track of the metrics in all the different cross-validation trainings.
+    """Class to keep track of AUC and ICI in all the different cross-validation trainings.
     """
     def __init__(self, path_results, set_name):
+        """
+        Input:
+         - path_results (str): path where results have to be saved
+         - set_name (str): "train", "val" or "test"
+        """
         self.auc = []
         self.ici = []
         self.path_results = path_results
         self.set_name = set_name
 
     def compute_metrics(self, labels, predictions):
+        """Compute metrics for a given set of labels/predictions and append it to the values of the previous folds
+        Input:
+         - labels (array-like): true labels
+         - predictions (array-like): target scores
+         """
         self.auc.append(roc_auc_score(labels, predictions))
         self.ici.append(ici(labels, predictions))
 
     def save_results(self):
+        """Save results as numpy arrays"""
         np.save(self.path_results + 'auc_' + self.set_name, self.auc)
         np.save(self.path_results + 'ici_' + self.set_name, self.ici)

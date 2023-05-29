@@ -1,3 +1,5 @@
+"""Script to train XGB or LR with the same dataset and the same cross-validations folds used for the CNN model. The
+script takes as input the folder with the CNN results, from which exam IDs of training and validation are extracted."""
 import json
 import os
 import argparse

@@ -1,3 +1,4 @@
+"""Script to train CNN models with cross-validation"""
 import os
 import sys
 
