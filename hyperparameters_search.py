@@ -34,7 +34,7 @@ def load_dataset(features, random_seed):
     """Load exams not used for training/test.
     It is fundamental to use the same random_seed used to build the other datasets: in this way all smaller datasets are
     sub-samples of the bigger ones. Thus removing the sample of 150.000 exams from the original dataset allows you to
-    remain with the exams not used."""
+    remain with the exams not used. It has to be generalized for applications external to this study."""
 
     df = pd.read_csv('/coorte/ASUGI/ECG_FA_5Y_v06.csv', encoding='iso-8859-1') # Importing tabular data
 
