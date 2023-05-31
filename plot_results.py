@@ -42,10 +42,33 @@ def load_auc_ici(folders, dependence_on="n_samples", n_folds=10):
 
 
 def main():
-    # Import json file with folders to be analyzed. It has to be structured as follows: keys are strings indicating
-    # the case-study ("size_dependence_original", "size_dependence_balanced" or "balance_dependence"); values are
-    # dictionaries with folders to be analyzed as values and corresponding sizes/ratios as keys.
-    with open('results/folders2use.json') as file:
+    """
+    Before to run this script, one has to create a json file with the names of the directories that have to be analyzed.
+    The file has to be structured as follows: keys are strings indicating the case-study ("size_dependence_original",
+    "size_dependence_balanced" or "balance_dependence"); values are dictionaries with folders to be analyzed as values
+    and corresponding sizes/ratios as keys.
+    Example:
+    {
+        "size_dependence_original" : {
+            "250": "N250_2023-05-29",
+            "300": "N300_2023-05-29"
+        },
+
+        "size_dependence_balanced" : {
+            "250": "N250_balanced05_2023-05-29",
+            "300": "N300_balanced05_2023-05-29"
+        },
+
+        "balance_dependence" : {
+            "0.125": "N250_2023-05-29",
+            "0.25":  "N250_balanced025_2023-05-29",
+            "0.375": "N250_balanced0375_2023-05-29",
+            "0.5":   "N250_balanced05_2023-05-29"
+        }
+    }
+    """
+    folders_json = 'results/folders2use.json'  # json file with directory names. Change it if necessary.
+    with open(folders_json) as file:
         folders_dict = json.load(file)
 
     # Factor to compute 95% CI from standard deviation
