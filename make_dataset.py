@@ -16,7 +16,9 @@ def main():
     # parsing arguments:
     parser = argparse.ArgumentParser()
     parser.add_argument('--n_samples', type=int)
-    parser.add_argument('--path_df', type=str, default='/coorte/ASUGI/ECG_FA_5Y_v06.csv')
+    parser.add_argument('--path_df', type=str, default='/coorte/ASUGI/ECG_FA_5Y_v06.csv')  # path csv ecg info
+    parser.add_argument('--path_ecgs', type=str, default='D:/WAVEFORMS/')                  # folder with ECG signals
+    parser.add_argument('--output_folder', type=str, default='datasets/')                  # output folder
     parser.add_argument('--random_seed', type=int, default=42)
     args = parser.parse_args()
 
@@ -32,11 +34,8 @@ def main():
     df_0fa = df[df[label] == 0].sample(n_0fa, random_state=args.random_seed)
     df_sample = pd.concat([df_1fa, df_0fa])      # concatenating the two dataframes
 
-    waveform_dir = 'D:/WAVEFORMS/'  # folder with ECG signals
-    dataset_dir = 'datasets/'       # folder where to save the dataset
-
     exams = df_sample["ExamID"].values.astype(int)  # Exam IDs to extract
-    filenames = np.array([os.path.join(waveform_dir, str(indx) + '.npy') for indx in exams])
+    filenames = np.array([os.path.join(args.path_ecgs, str(indx) + '.npy') for indx in exams])
 
     freq_resample = 500  # resampling frequency
     n_points_resample = 10 * freq_resample  # number of time points after resampling
@@ -53,7 +52,7 @@ def main():
             print(f'\nerror: {filename} - {error}')
 
     # saving ECGs and exam_IDs in the same npz file
-    filename = os.path.join(dataset_dir, 'X_' + str(args.n_samples))
+    filename = os.path.join(args.output_folder, 'X_' + str(args.n_samples))
     np.savez_compressed(filename, ecgs, exams)
 
 
