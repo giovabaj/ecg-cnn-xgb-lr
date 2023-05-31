@@ -57,8 +57,7 @@ def load_dataset(features, random_seed):
 def lr_params_search(x, y, key_anagrafe, n_folds, n_iter, random_seed):
     """Hyperparameters search for logistic regression"""
     params = {
-        'solver': ['newton-cg'],  # newton-cg is always chosen
-        'penalty': ['l2'],
+        'penalty': ['l1', 'l2'],
         'C': uniform(0.01, 100)
     }
     # parameters search for LR
